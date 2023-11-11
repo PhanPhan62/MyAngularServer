@@ -10,46 +10,19 @@ exports.getAllProduct = (req, res) => {
 
     });
 };
-// exports.createProduct = (req, res) => {
-//     const productData = {
-//         MaLoai: req.body.MaLoai,
-//         TenSanPham: req.body.TenSanPham,
-//         MoTaSanPham: req.body.MoTaSanPham,
-//         MaNSX: req.body.MaNSX,
-//         MaDonViTinh: req.body.MaDonViTinh,
-//     };
-
-//     db.query('INSERT INTO sanpham SET ?', productData, (err, result) => {
-//         if (err) {
-//             console.log(err);
-//             res.status(500).json({ message: 'Lỗi khi lưu vào bảng "sanpham"' });
-//         } else {
-//             const MaSanPham = result.insertId; // Lấy ID của sản phẩm vừa thêm
-
-//             // Xử lý tải lên ảnh vào bảng "chitietanh"
-//             const fileNames = req.files.map((file) => file.filename);
-//             fileNames.forEach((fileName) => {
-//                 const chiTietAnhData = {
-//                     MaSanPham: MaSanPham,
-//                     Anh: fileName,
-//                 };
-
-//                 db.query('INSERT INTO chitietanh SET ?', chiTietAnhData, (err) => {
-//                     if (err) {
-//                         console.log(err);
-//                         res.status(500).json({ message: 'Lỗi khi lưu vào bảng "chitietanh"' });
-//                     }
-//                 });
-//             });
-
-//             res.json({ message: 'Tải lên và lưu sản phẩm thành công' });
-//         }
-//     });
-
-
-
-
-// };
+exports.showProductByID = (req, res) => {
+    try {
+        const id = req.params.id;
+        const sql = 'SELECT * FROM sanpham where id = ?';
+        db.query(sql, id, (err, result) => {
+            if (err) throw err;
+            res.json(result);
+        });
+    } catch (error) {
+        console.error('Lỗi:', error);
+        res.status(500).json({ error: 'Đã có lỗi xảy ra.' });
+    }
+}
 exports.createProduct = (req, res) => {
     try {
         const { MaLoai, TenSanPham, MoTaSanPham, MaNSX, MaDonViTinh } = req.body;
