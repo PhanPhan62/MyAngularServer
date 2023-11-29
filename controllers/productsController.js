@@ -25,6 +25,7 @@ exports.showProductByID = (req, res) => {
 }
 exports.createProduct = (req, res) => {
     try {
+        const { addMonths, format } = require('date-fns');
         const { MaLoai, TenSanPham, MoTaSanPham, MaNSX, MaDonViTinh } = req.body;
         const query = 'INSERT INTO sanpham (MaLoai, TenSanPham, MoTaSanPham, MaNSX, MaDonViTinh) VALUES (?, ?, ?, ?, ?)';
         const values = [MaLoai, TenSanPham, MoTaSanPham, MaNSX, MaDonViTinh];
@@ -50,11 +51,13 @@ exports.createProduct = (req, res) => {
 
                 const ngayBatDau = new Date();
                 const formattedNgayBatDau = ngayBatDau.toISOString().slice(0, 10);
-                const ngayKetThuc = req.body.NgayKetThuc || null;
+                // const ngayKetThuc = req.body.NgayKetThuc || null;
+                const ngayKetThuc = addMonths(ngayBatDau, 3);
+                const formattedNgayKetThuc = format(ngayKetThuc, 'yyyy-MM-dd');
                 const gia = req.body.Gia;
 
                 const giaSanPhamQuery = 'INSERT INTO giasanpham (MaSanPham, NgayBatDau, NgayKetThuc, Gia) VALUES (?, ?, ?, ?)';
-                const giaSanPhamValues = [sanphamId, formattedNgayBatDau, ngayKetThuc, gia];
+                const giaSanPhamValues = [sanphamId, formattedNgayBatDau, formattedNgayKetThuc, gia];
 
                 db.query(giaSanPhamQuery, giaSanPhamValues, (err) => {
                     if (err) {
@@ -71,4 +74,17 @@ exports.createProduct = (req, res) => {
         console.error('Lỗi:', error);
         res.status(500).json({ error: 'Đã có lỗi xảy ra.' });
     }
+};
+
+
+exports.deleteProduct = (req, res) => {
+    const id = req.params.id;
+    db.query('	CALL deleteProduct(?)', id, (err, results) => {
+        if (err) {
+            res.status(500).json({ message: 'Lỗi xóa', error: err });
+        } else {
+            res.status(200).json({ message: 'Xóa thành công!!!' });
+        }
+    });
+
 };
