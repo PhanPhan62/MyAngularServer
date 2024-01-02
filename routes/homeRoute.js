@@ -10,9 +10,11 @@ router.get('/getAllSell', homeController.getAllSell);
 router.get('/getAllSell3', homeController.getAllSell3);
 router.get('/getByIdProduct/:id', homeController.getByIdProduct);
 router.get('/listImg/:id', homeController.listImg);
+router.get('/productDetail/:id', homeController.getProductDetail);
 // router.post('/login', homeController.verifyToken, (req, res) => {
 //     res.json({ message: 'Route đã được xác thực' });
 // });
 router.post('/login', homeController.login);
+router.post('/loginKH', homeController.loginKH);
 
 module.exports = router;

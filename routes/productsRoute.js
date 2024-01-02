@@ -18,7 +18,7 @@ router.get('/product', productsController.getAllProduct);
 router.get('/product/show/:id', productsController.showProductByID);
 
 router.post('/sanpham', upload.array('Anh', 10), productsController.createProduct);
-router.post('/product/update/:id', upload.array('Anh', 10), productsController.updateProduct);
+router.patch('/product/update/:id', upload.array('Anh', 10), productsController.updateProduct);
 
 router.delete('/product/delete/:id', productsController.deleteProduct)
 
