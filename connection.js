@@ -6,7 +6,6 @@ const db = mysql.createConnection({
     password: 'Phanthanhcong29032002@',
     database: 'grimcy'
 });
-
 db.connect((err) => {
     if (err) {
         console.error('Lỗi kết nối đến cơ sở dữ liệu:', err);
@@ -14,5 +13,4 @@ db.connect((err) => {
         console.log('Kết nối đến cơ sở dữ liệu thành công.');
     }
 });
-
 module.exports = db;

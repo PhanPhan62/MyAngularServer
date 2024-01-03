@@ -22,9 +22,9 @@ exports.createOrder = (req, res) => {
 
                 // Thêm dữ liệu vào bảng 'chitietdonhang' cho từng sản phẩm
                 chiTietDonHang.forEach((item) => {
-                    const { productId, quantity, Gia } = item;
-                    const detailOrderQuery = 'INSERT INTO chitietdonhang (MaDonHang, MaSanPham, SoLuong, GiaMua) VALUES (?, ?, ?, ?)';
-                    const detailOrderValues = [orderId, productId, quantity, Gia];
+                    const { productId, quantity, Gia, ThanhTien } = item;
+                    const detailOrderQuery = 'INSERT INTO chitietdonhang (MaDonHang, MaSanPham, SoLuong, GiaMua, ThanhTien) VALUES (?, ?, ?, ?, ?)';
+                    const detailOrderValues = [orderId, productId, quantity, Gia, ThanhTien];
 
                     db.query(detailOrderQuery, detailOrderValues, (err) => {
                         if (err) {
@@ -32,6 +32,15 @@ exports.createOrder = (req, res) => {
                         }
                     });
                     // console.log(chiTietDonHang);
+
+                    db.query('CALL UpdateDonHangThanhTien();', (err, results) => {
+                        if (err) {
+                            res.status(500).json({ message: 'Lỗi', error: err });
+                        } else {
+                            res.status(200).json(results[0]);
+                        }
+
+                    });
                 });
 
                 // Thông báo chỉ được gửi khi tất cả dữ liệu đã được thêm thành công
@@ -43,7 +52,6 @@ exports.createOrder = (req, res) => {
         res.status(500).json({ error: 'Đã có lỗi xảy ra.' });
     }
 };
-
 exports.countOrder = (req, res) => {
 
     db.query('SELECT * FROM donhang WHERE NgayDat >= CURDATE() - INTERVAL 30 DAY and TrangThaiDonHang = 1; ', (err, results) => {
@@ -80,6 +88,18 @@ exports.countTotalCost = (req, res) => {
 exports.countUsers = (req, res) => {
 
     db.query('SELECT * FROM taikhoankhachhang', (err, results) => {
+        if (err) {
+            res.status(500).json({ message: 'Lỗi', error: err });
+        } else {
+            res.status(200).json(results);
+        }
+
+    });
+};
+
+exports.getAll = (req, res) => {
+
+    db.query('Select * from donhang', (err, results) => {
         if (err) {
             res.status(500).json({ message: 'Lỗi', error: err });
         } else {

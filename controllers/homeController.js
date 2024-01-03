@@ -167,3 +167,35 @@ exports.getProductDetail = (req, res) => {
 
     });
 };
+
+exports.GETALLPRODUCTSIMILAR = (req, res) => {
+    const id = req.params.id;
+    db.query('CALL GETALLPRODUCTSIMILAR(?,?)', [id], (err, results) => {
+        if (err) {
+            res.status(500).json({ message: 'Lỗi', error: err });
+        } else {
+            res.status(200).json(results[0]);
+        }
+
+    });
+};
+exports.getOrder = (req, res) => {
+    db.query('call getOrdersAndDetail()', (err, results) => {
+        if (err) {
+            res.status(500).json({ message: 'Lỗi', error: err });
+        } else {
+            res.status(200).json(results[0]);
+        }
+
+    });
+};
+// exports.getOrder = (req, res) => {
+//     db.query('select*from donhang', (err, results) => {
+//         if (err) {
+//             res.status(500).json({ message: 'Lỗi', error: err });
+//         } else {
+//             res.status(200).json(results);
+//         }
+
+//     });
+// };
